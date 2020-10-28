@@ -1,0 +1,4 @@
+venv
+.git
+*/.git
+db.sqlite
