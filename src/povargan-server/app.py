@@ -16,8 +16,6 @@ examples = [
 
 @app.route('/generate-image', methods=['get'])
 def handle_generate_request():
-    request_text = request.form['text']
-    print(request_text)
     sleep(1)
     generated_img_path = random.choice(examples)
 
