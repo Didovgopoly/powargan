@@ -23,12 +23,31 @@ class App extends Component<any, State> {
   }
 
   executeRequest() {
-    fetch(process.env.REACT_APP_BACKEND_URL + "generate-image")
-      .then(response => response.json())
-      .then(json => {
-        console.log('received image', json.id)
-        this.setState({data: json.img})
-      });
+    var url = process.env.REACT_APP_BACKEND_URL + "generate-image";
+    fetch(url,      {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      //make sure to serialize your JSON body
+      body: JSON.stringify({
+        text: this.state.request,
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log('received image', json.id)
+      this.setState({data: json.img})
+    }).catch((err) => {
+    console.log(err);
+  });
+    // fetch(process.env.REACT_APP_BACKEND_URL + "generate-image")
+    //   .then(response => response.json())
+    //   .then(json => {
+    //     console.log('received image', json.id)
+    //     this.setState({data: json.img})
+    //   });
   }
 
   render() {
