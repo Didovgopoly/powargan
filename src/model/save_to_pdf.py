@@ -1,7 +1,12 @@
 from fpdf import FPDF
 import platform
+import torchvision.utils as vutils
+import os
 
-def save_pdf_images(data, titles, path, epoch, step):
+def save_pdf_images(data, titles, path, file_name, font_size = 6):
+    os.makedirs(path, exist_ok=True)
+    os.makedirs(f'{path}/tmp', exist_ok=True)
+    
     for idx in range(data.shape[0]):
         image = data[idx]
         path_image = f'{path}/tmp/{idx}.png' 
@@ -13,7 +18,7 @@ def save_pdf_images(data, titles, path, epoch, step):
     if platform.system() == 'Linux':
         document.add_font('current_font','', '/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf', uni=True)
 
-    document.set_font('current_font', size=6)
+    document.set_font('current_font', size=font_size)
 
     startPoint = (6, 6)
     image_size = 60
@@ -34,4 +39,4 @@ def save_pdf_images(data, titles, path, epoch, step):
         document.text(idx * block_size + startPoint[0], line * block_size + startPoint[1], titles[image_idx])
         document.image(f'{path}/tmp/{image_idx}.png', x = idx * block_size + startPoint[0], y = line * block_size + startPoint[1] + 3, w = image_size, h = image_size)
      
-    document.output(f'{path}/{config["MODEL_NAME"]}_{epoch}_{step}.pdf')
+    document.output(f'{path}/{file_name}.pdf')
