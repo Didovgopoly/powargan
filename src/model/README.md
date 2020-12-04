@@ -7,4 +7,5 @@
 * DF_GAN_all_in_one_128x128_pdf [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/DF_GAN_all_in_one_128x128_pdf.ipynb)
 * DF_GAN_all_in_one_less_parameters [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/DF_GAN_all_in_one_less_parameters.ipynb)
 * Resnet50_feature_extractor [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/Resnet50_feature_extractor.ipynb)
-* W2V_embeddings.ipynb [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/W2V_embeddings.ipynb.ipynb)
+* W2V_embeddings.ipynb [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/W2V_embeddings.ipynb)
+* DF_GAN_lstm_cycle_loss.ipynb [![Open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Didovgopoly/powargan/blob/master/src/model/DF_GAN_lstm_cycle_loss.ipynb)
