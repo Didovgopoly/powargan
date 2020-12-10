@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 import uuid
 import torchvision.utils as vutils
-from model.rubert import transform
+from model.text_transform import transform
 from model.netg import generate
 
 import io
@@ -40,7 +40,7 @@ def handle_generate_request():
     res = ""
     text = json['text']
     try:        
-        title_emb = transform(text)
+        title_emb = transform(text,"",text)
         fake = generate(title_emb,4)
         
         # generated_img_path = get_image_name("/result/")        

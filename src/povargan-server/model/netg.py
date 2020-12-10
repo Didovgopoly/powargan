@@ -4,15 +4,17 @@ import torch.nn as nn
 import torchvision.utils as vutils
 import torch.nn.functional as F
 
+EMB_SIZE = 512
+
 class NetG(nn.Module):
     def __init__(self, ngf=64, nz=100):
         super(NetG, self).__init__()
 
-        self.fc_embedding = nn.Linear(768, 256)
+        # self.fc_embedding = nn.Linear(768, 256)
 
         self.ngf = ngf
 
-        # layer1100x1x1,(ngf*8)x4x4
+        
         self.fc = nn.Linear(nz, ngf*8*4*4)
         self.block0 = G_Block(ngf * 8, ngf * 8)#4x4
         self.block1 = G_Block(ngf * 8, ngf * 8)#4x4
@@ -21,6 +23,7 @@ class NetG(nn.Module):
         self.block4 = G_Block(ngf * 8, ngf * 4)#32x32
         self.block5 = G_Block(ngf * 4, ngf * 2)#64x64
         self.block6 = G_Block(ngf * 2, ngf * 1)#128x128
+        # self.block5 = G_Block(ngf * 4, ngf * 1)
 
         self.conv_img = nn.Sequential(
             nn.LeakyReLU(0.2,inplace=True),
@@ -30,7 +33,7 @@ class NetG(nn.Module):
 
     def forward(self, x, c):
 
-        c = self.fc_embedding(c)
+        # c = self.fc_embedding(c)
 
         out = self.fc(x)
         out = out.view(x.size(0), 8*self.ngf, 4, 4)
@@ -50,7 +53,6 @@ class NetG(nn.Module):
 
         out = F.interpolate(out, scale_factor=2)
         out = self.block5(out,c)
-
         out = F.interpolate(out, scale_factor=2)
         out = self.block6(out,c)
 
@@ -104,12 +106,12 @@ class affine(nn.Module):
         super(affine, self).__init__()
 
         self.fc_gamma = nn.Sequential(OrderedDict([
-            ('linear1',nn.Linear(256, 256)),
+            ('linear1',nn.Linear(EMB_SIZE, 256)),
             ('relu1',nn.ReLU(inplace=True)),
             ('linear2',nn.Linear(256, num_features)),
             ]))
         self.fc_beta = nn.Sequential(OrderedDict([
-            ('linear1',nn.Linear(256, 256)),
+            ('linear1',nn.Linear(EMB_SIZE, 256)),
             ('relu1',nn.ReLU(inplace=True)),
             ('linear2',nn.Linear(256, num_features)),
             ]))
@@ -137,11 +139,11 @@ class affine(nn.Module):
         return weight * x + bias
 
 netG = NetG(32, 100)
-path_netG = f'trained/eda_ru_tuned_bert_title_emb_only_netG_168.pth' 
+path_netG = f'trained/dfgan_eda_povar_2cycle_256_netG.pth'
 netG.load_state_dict(torch.load(path_netG,map_location=torch.device('cpu')))
 netG.eval()
 
 def generate(emb,sz):
     noise = torch.randn(sz, 100)
     noise=noise.to('cpu')
-    return netG(noise,emb)  
+    return netG(noise,emb)
