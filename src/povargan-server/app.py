@@ -47,14 +47,18 @@ def handle_generate_request():
     app.logger.info('steps:' + steps)
     try:        
         title_emb = transform(title,ingredients,steps)
-        fake = generate(title_emb,4)
-        
+        fake = generate(title_emb)
+        if fake.shape[0]==4:
+            nrow=2
+        else:
+            nrow=3
+
         # generated_img_path = get_image_name("/result/")        
         # vutils.save_image(fake.data,generated_img_path,nrow=2, normalize=True)
         # with open(generated_img_path, "rb") as image_file:
         #     encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
 
-        grid = vutils.make_grid(fake.data, nrow=2,normalize=True)
+        grid = vutils.make_grid(fake.data, nrow=nrow,normalize=True)
         ndarr = grid.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
         im = Image.fromarray(ndarr)
         temp = io.BytesIO()

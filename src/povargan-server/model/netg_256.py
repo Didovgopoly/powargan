@@ -1,5 +1,3 @@
-path_netG = f'trained/eda_ru_df_gan_lstm_cycle_loss_ingr_steps_128_netG_epoch_38.pth'
-
 from collections import OrderedDict
 import torch
 import torch.nn as nn
@@ -23,9 +21,9 @@ class NetG(nn.Module):
         self.block2 = G_Block(ngf * 8, ngf * 8)#8x8
         self.block3 = G_Block(ngf * 8, ngf * 8)#16x16
         self.block4 = G_Block(ngf * 8, ngf * 4)#32x32
-        # self.block5 = G_Block(ngf * 4, ngf * 2)#64x64
-        # self.block6 = G_Block(ngf * 2, ngf * 1)#128x128
-        self.block5 = G_Block(ngf * 4, ngf * 1)
+        self.block5 = G_Block(ngf * 4, ngf * 2)#64x64
+        self.block6 = G_Block(ngf * 2, ngf * 1)#128x128
+        # self.block5 = G_Block(ngf * 4, ngf * 1)
 
         self.conv_img = nn.Sequential(
             nn.LeakyReLU(0.2,inplace=True),
@@ -55,9 +53,8 @@ class NetG(nn.Module):
 
         out = F.interpolate(out, scale_factor=2)
         out = self.block5(out,c)
-
-        # out = F.interpolate(out, scale_factor=2)
-        # out = self.block6(out,c)
+        out = F.interpolate(out, scale_factor=2)
+        out = self.block6(out,c)
 
         out = self.conv_img(out)
 
@@ -142,11 +139,11 @@ class affine(nn.Module):
         return weight * x + bias
 
 netG = NetG(32, 100)
-
+path_netG = f'trained/dfgan_eda_povar_2cycle_256_netG.pth'
 netG.load_state_dict(torch.load(path_netG,map_location=torch.device('cpu')))
 netG.eval()
 
-def generate(emb,sz=9):
+def generate(emb,sz=4):
     noise = torch.randn(sz, 100)
     noise=noise.to('cpu')
     return netG(noise,emb)
