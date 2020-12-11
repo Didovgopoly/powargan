@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -11,13 +12,14 @@ interface State {
   title: string;
   ingredients: string;
   steps: string;
+  loading: boolean;
   data?: string;
 }
 
 class App extends Component<any, State> {
   constructor(props: any) {
     super(props);
-    this.state = {title: '', ingredients: '', steps:''};
+    this.state = {title: '', ingredients: '', steps:'', loading: false};
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
@@ -43,6 +45,8 @@ class App extends Component<any, State> {
   }
   
   runRequest(title: string, ingredients: string, steps: string){
+    this.setState({loading: true}); 
+      
     var url = process.env.REACT_APP_BACKEND_URL + "generate-image";
     fetch(url,      {
       method: "POST",
@@ -60,9 +64,10 @@ class App extends Component<any, State> {
     .then(response => response.json())
     .then(json => {
       console.log('received image', json.id)
-      this.setState({data: json.img})
+      this.setState({data: json.img, loading: false})
     }).catch((err) => {
-    console.log(err);
+      this.setState({loading: false})
+      console.log(err);
   });
   }
   
@@ -88,15 +93,15 @@ class App extends Component<any, State> {
           <Col xs={6}>
             <Form>
               <Form.Group>
-                <Form.Label>Название</Form.Label>
-                <Form.Control  id="basic-url" as="textarea" value={this.state.title} rows={1} onChange={this.handleTitleChange}/>
+                <Form.Label>Название рецепта</Form.Label>
+                <Form.Control type="text" value={this.state.title} onChange={this.handleTitleChange}/>
               </Form.Group>
               <Form.Group>
                 <Form.Label>Ингридиенты</Form.Label>
                 <Form.Control as="textarea" value={this.state.ingredients} rows={5} onChange={this.handleIngredientsChange}/>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Рецепт</Form.Label>
+                <Form.Label>Описание шагов приготовления</Form.Label>
                 <Form.Control as="textarea" value={this.state.steps} rows={5} onChange={this.handleStepsChange}/>
               </Form.Group>
 
@@ -116,7 +121,12 @@ class App extends Component<any, State> {
               </Row>
           </Col>
           <Col xs={6} className="pl-4">
-            {this.state.data && <img src={`data:image/jpeg;base64,${this.state.data}`}/>}
+            {!this.state.loading && this.state.data && <img src={`data:image/jpeg;base64,${this.state.data}`}/>}
+            { this.state.loading &&
+             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'  }}>
+                <Spinner animation="border" variant="primary" />
+             </div>
+            }
           </Col>
         </Row>
       </Container>
