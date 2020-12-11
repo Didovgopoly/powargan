@@ -8,7 +8,7 @@ from flask_cors import CORS
 import uuid
 import torchvision.utils as vutils
 from model.text_transform import transform
-from model.netg import generate
+from model.netg import generate_select
 
 import io
 import torch
@@ -46,8 +46,8 @@ def handle_generate_request():
     app.logger.info('ingredients:' + ingredients)
     app.logger.info('steps:' + steps)
     try:        
-        title_emb = transform(title,ingredients,steps)
-        fake = generate(title_emb)
+        title_emb,steps_emb = transform(title,ingredients,steps)
+        fake = generate_select(title_emb,steps_emb)
         if fake.shape[0]==4:
             nrow=2
         else:
@@ -67,6 +67,7 @@ def handle_generate_request():
 
     except Exception as e:
         res = str(e)        
+        app.logger.info(res)
 
     resp = jsonify({
         'img': encoded_string,

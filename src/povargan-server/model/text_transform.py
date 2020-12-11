@@ -114,4 +114,4 @@ def steps_to_emb(steps):
   return lstm_steps(emb)
 
 def transform(title,ingr,steps):    
-    return torch.cat([title_ingr_to_emb(title,ingr),steps_to_emb(steps)],axis=1).cpu().detach()
+    return title_ingr_to_emb(title,ingr).cpu().detach(),steps_to_emb(steps).cpu().detach()

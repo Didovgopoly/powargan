@@ -1,6 +1,9 @@
 path_netG = f'trained/eda_ru_df_gan_lstm_cycle_loss_ingr_steps_128_netG_epoch_38.pth'
+resnet_title_ingr_path = f'trained/best_resnet_title_ingr.pth'
+resnet_steps_path = f'trained/best_resnet_steps.pth'
 
 from collections import OrderedDict
+import numpy as np
 import torch
 import torch.nn as nn
 import torchvision.utils as vutils
@@ -146,7 +149,39 @@ netG = NetG(32, 100)
 netG.load_state_dict(torch.load(path_netG,map_location=torch.device('cpu')))
 netG.eval()
 
-def generate(emb,sz=9):
-    noise = torch.randn(sz, 100)
+from torchvision import models
+def load_resnet(resnet_path, food_space_dim=512):
+    resnet_fe = models.resnet50(pretrained=False)
+    num_ftrs = resnet_fe.fc.in_features
+    resnet_fe.fc = nn.Linear(num_ftrs, food_space_dim) # Чтобы загрузить веса обученной ранее модели модели
+    resnet_fe.load_state_dict(torch.load(resnet_path,map_location=torch.device('cpu')))
+    return resnet_fe
+
+resnet_title_ingr = load_resnet(resnet_title_ingr_path, 256)
+resnet_steps = load_resnet(resnet_steps_path, 256)
+resnet_title_ingr.eval()
+resnet_steps.eval()
+
+def dist(a,b):
+  a = a.detach().numpy()[0]
+  b = b.detach().numpy()[0]
+  return a.dot(b)/np.linalg.norm(a)/np.linalg.norm(b)
+
+def select_best(fake,title_emb,steps_emb,best_size):
+  similarities = []
+  for i in range(fake.shape[0]):
+    resnet_emb_title_ingr = resnet_title_ingr(fake[i].unsqueeze(0))
+    resnet_emb_steps = resnet_steps(fake[i].unsqueeze(0))
+    d_ingr = dist(title_emb,resnet_emb_title_ingr)
+    d_steps = dist(steps_emb,resnet_emb_steps)
+    similarities.append(d_ingr/5.+d_steps)
+  sorted_indexes = np.argsort(similarities)
+  return fake[sorted_indexes[-best_size:]]
+
+def generate_select(title_emb,steps_emb,sz=9):
+    gen_sz = 2*sz
+    emb = torch.cat([title_emb,steps_emb],axis=1)
+    noise = torch.randn(gen_sz, 100)
     noise=noise.to('cpu')
-    return netG(noise,emb)
+    fake = netG(noise,emb)    
+    return select_best(fake,title_emb,steps_emb,sz)

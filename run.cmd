@@ -14,5 +14,11 @@ copy /y src\povargan-server\model\netg_128.py src\povargan-server\model\netg.py
 python util/GDriveDL.py https://drive.google.com/file/d/11TR-z4RoQYSsR7oUXy7byCl4HX9uD3jF/view?usp=sharing src\povargan-server\trained\
 
 
+rem resnet
+python util/GDriveDL.py https://drive.google.com/file/d/1udslmO77CcvKKnfY7y-NkbleqC0QsfOz/view?usp=sharing src\povargan-server\trained\
+python util/GDriveDL.py https://drive.google.com/file/d/1qjQW3MUfOc46bEYPIzeFT1wXqJfEIEPJ/view?usp=sharing src\povargan-server\trained\
+
+
+
 docker-compose build
 docker-compose up
