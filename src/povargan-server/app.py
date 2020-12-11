@@ -38,9 +38,15 @@ def handle_generate_request():
     json = request.get_json()
     encoded_string = ""
     res = ""
-    text = json['text']
+    title = json['title']
+    ingredients = json['ingredients']
+    steps = json['steps']
+    
+    app.logger.info('title:' + title)
+    app.logger.info('ingredients:' + ingredients)
+    app.logger.info('steps:' + steps)
     try:        
-        title_emb = transform(text,"",text)
+        title_emb = transform(title,ingredients,steps)
         fake = generate(title_emb,4)
         
         # generated_img_path = get_image_name("/result/")        
@@ -60,7 +66,7 @@ def handle_generate_request():
 
     resp = jsonify({
         'img': encoded_string,
-        'txt': text,
+        'txt': title,
         'res': res        
     })
 

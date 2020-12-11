@@ -1,28 +1,48 @@
 import React, {Component} from 'react';
 import './App.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Form} from "react-bootstrap";
 
 interface State {
-  request: string;
+  title: string;
+  ingredients: string;
+  steps: string;
   data?: string;
 }
 
 class App extends Component<any, State> {
   constructor(props: any) {
     super(props);
-    this.state = {request: ''};
+    this.state = {title: '', ingredients: '', steps:''};
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
+    this.handleStepsChange = this.handleStepsChange.bind(this);
     this.executeRequest = this.executeRequest.bind(this);
+    this.luckyRequest = this.luckyRequest.bind(this);
   }
 
-  handleChange(event: any) {
-    this.setState({request: event.target.value});
+  handleTitleChange(event: any) {
+    this.setState({title: event.target.value});
+  }
+  handleIngredientsChange(event: any) {
+    this.setState({ingredients: event.target.value});
+  }
+  handleStepsChange(event: any) {
+    this.setState({steps: event.target.value});
   }
 
   executeRequest() {
+    this.runRequest(this.state.title,
+        this.state.ingredients,
+        this.state.steps)
+  }
+  
+  runRequest(title: string, ingredients: string, steps: string){
     var url = process.env.REACT_APP_BACKEND_URL + "generate-image";
     fetch(url,      {
       method: "POST",
@@ -32,7 +52,9 @@ class App extends Component<any, State> {
       },
       //make sure to serialize your JSON body
       body: JSON.stringify({
-        text: this.state.request,
+        title: title,
+        ingredients: ingredients,
+        steps: steps,
       })
     })
     .then(response => response.json())
@@ -42,37 +64,54 @@ class App extends Component<any, State> {
     }).catch((err) => {
     console.log(err);
   });
-    // fetch(process.env.REACT_APP_BACKEND_URL + "generate-image")
-    //   .then(response => response.json())
-    //   .then(json => {
-    //     console.log('received image', json.id)
-    //     this.setState({data: json.img})
-    //   });
+  }
+  
+  luckyRequest() {
+      var title = 'Булочка с повидлом'
+      var ingredients = 'Мука'
+      var steps = 'Пожарить'
+      
+      this.setState({title: title});
+      this.setState({ingredients: ingredients});
+      this.setState({steps: steps});
+      this.runRequest(title, ingredients, steps)
   }
 
   render() {
     return (
-      <div className="container">
-        <div className="row mt-5">
+      <Container> 
+        <Row className="mt-5" noGutters>
           <h1>Генерирую картинку блюда по тексту рецепта</h1>
           <p className="lead">Вставь текст рецепта с ингридиентами в поле ниже и нажми "Сгенерировать картинку"</p>
-        </div>
-        <div className="row">
-          <div className="col-6">
+        </Row>
+        <Row noGutters>
+          <Col xs={6}>
             <Form>
               <Form.Group controlId="exampleForm.ControlTextarea1">
-                <Form.Control as="textarea" rows={10} onChange={this.handleChange}/>
+                <Form.Control as="textarea" value={this.state.title} rows={1} onChange={this.handleTitleChange}/>
+                <Form.Control as="textarea" value={this.state.ingredients} rows={5} onChange={this.handleIngredientsChange}/>
+                <Form.Control as="textarea" value={this.state.steps} rows={5} onChange={this.handleStepsChange}/>
               </Form.Group>
             </Form>
-            <Button variant="light" onClick={this.executeRequest} size="lg">
-              Сгенерировать картинку
-            </Button>
-          </div>
-          <div className="col-6">
+            
+              <Row>
+                <Col sm>
+                  <Button variant="light" onClick={this.executeRequest} size="lg">
+                  Сгенерировать
+                  </Button>
+                </Col>
+                <Col sm>
+                  <Button variant="light" onClick={this.luckyRequest} size="lg">
+                  Мне повезёт
+                  </Button>
+                </Col>
+              </Row>
+          </Col>
+          <Col xs={6} className="pl-5">
             {this.state.data && <img src={`data:image/jpeg;base64,${this.state.data}`}/>}
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
     )
   }
 }
