@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Form} from "react-bootstrap";
+import { getRandomRecipe } from "./recipes";
 
 interface State {
   title: string;
@@ -72,9 +73,10 @@ class App extends Component<any, State> {
   }
   
   luckyRequest() {
-      var title = 'Булочка с повидлом'
-      var ingredients = 'Мука'
-      var steps = 'Пожарить'
+      var recipe = getRandomRecipe()
+      var title = recipe[0];
+      var ingredients = recipe[1];
+      var steps = recipe[2];
       
       this.setState({title: title});
       this.setState({ingredients: ingredients});
