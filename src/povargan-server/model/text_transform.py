@@ -25,7 +25,8 @@ with open(w2tag_path,"rb") as file:
 model_w2v = Word2Vec.load(str(w2v_path))
 
 def text_to_w2v_embeddings(text, model=model_w2v, word2tag=word_to_tag):
-    text = re.sub(r'[^\w\s]+|[\d]+', r'',text.lower()).strip()
+    # text = re.sub(r'[^\w\s]+|[\d]+', r'',text.lower()).strip()
+    text = re.sub(r'[^\w\t\v\f]+|[\d]+', r' ',text.lower()).strip()
     embds = []
     for word in text.split(' '):
         try:
