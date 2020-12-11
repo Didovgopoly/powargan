@@ -82,32 +82,40 @@ class App extends Component<any, State> {
       <Container> 
         <Row className="mt-5" noGutters>
           <h1>Генерирую картинку блюда по тексту рецепта</h1>
-          <p className="lead">Вставь текст рецепта с ингридиентами в поле ниже и нажми "Сгенерировать картинку"</p>
+          <p className="lead">Вставь текст рецепта с ингридиентами в поле ниже и нажми "Сгенерировать"</p>
         </Row>
         <Row noGutters>
           <Col xs={6}>
             <Form>
-              <Form.Group controlId="exampleForm.ControlTextarea1">
-                <Form.Control as="textarea" value={this.state.title} rows={1} onChange={this.handleTitleChange}/>
+              <Form.Group>
+                <Form.Label>Название</Form.Label>
+                <Form.Control  id="basic-url" as="textarea" value={this.state.title} rows={1} onChange={this.handleTitleChange}/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Ингридиенты</Form.Label>
                 <Form.Control as="textarea" value={this.state.ingredients} rows={5} onChange={this.handleIngredientsChange}/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Рецепт</Form.Label>
                 <Form.Control as="textarea" value={this.state.steps} rows={5} onChange={this.handleStepsChange}/>
               </Form.Group>
+
             </Form>
             
               <Row>
-                <Col sm>
+                <Col>
                   <Button variant="light" onClick={this.executeRequest} size="lg">
                   Сгенерировать
                   </Button>
                 </Col>
-                <Col sm>
-                  <Button variant="light" onClick={this.luckyRequest} size="lg">
+                <Col style={{display: 'flex', justifyContent: 'flex-end'}}>
+                  <Button  variant="light" onClick={this.luckyRequest} size="lg">
                   Мне повезёт
                   </Button>
                 </Col>
               </Row>
           </Col>
-          <Col xs={6} className="pl-5">
+          <Col xs={6} className="pl-4">
             {this.state.data && <img src={`data:image/jpeg;base64,${this.state.data}`}/>}
           </Col>
         </Row>
