@@ -6,15 +6,16 @@ services:
       context: ./src/povargan-ui
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3030:3030"
     environment:
-      REACT_APP_BACKEND_URL: http://localhost:5000/
+      REACT_APP_BACKEND_URL: http://localhost:5050/
+      PORT: 3030
   server:
     build: 
       context: ./src/povargan-server
       dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 5050:5050
     environment:
-      PORT: 5000
+      PORT: 5050
       FLASK_DEBUG: 1
