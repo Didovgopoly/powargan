@@ -67,12 +67,15 @@ def handle_generate_request():
 
     except Exception as e:
         res = str(e)        
-        app.logger.info(res)
+        app.logger.info(res)                
+        with open("static/img/error.jpg", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+        title = "Вашу еду кто-то съел :("
 
     resp = jsonify({
         'img': encoded_string,
         'txt': title,
-        'res': res        
+        'res': res
     })
 
     return resp
