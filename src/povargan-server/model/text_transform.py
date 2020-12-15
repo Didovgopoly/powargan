@@ -16,8 +16,8 @@ device = torch.device('cpu')
 
 w2v_path = Path('trained/food_w2v_300.w2v')
 w2tag_path = Path('trained/w2tag.pkl')
-lstm_title_ingr_path = Path('trained/best_lstm_title_ingr.pth')
-lstm_steps_path = Path('trained/best_lstm_steps.pth')
+lstm_title_ingr_path = Path('trained/title_ingr_text_encoder.pth')
+lstm_steps_path = Path('trained/steps_text_encoder.pth')
 
 with open(w2tag_path,"rb") as file:
   word_to_tag = pickle.load(file)

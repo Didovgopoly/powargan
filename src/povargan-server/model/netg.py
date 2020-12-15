@@ -1,6 +1,6 @@
-path_netG = f'trained/eda_ru_df_gan_lstm_cycle_loss_ingr_steps_128_netG_epoch_38.pth'
-resnet_title_ingr_path = f'trained/best_resnet_title_ingr.pth'
-resnet_steps_path = f'trained/best_resnet_steps.pth'
+path_netG = f'trained/dfgan_128.pth'
+resnet_title_ingr_path = f'trained/title_ingr_image_encoder.pth'
+resnet_steps_path = f'trained/steps_image_encoder.pth'
 
 from collections import OrderedDict
 import numpy as np
