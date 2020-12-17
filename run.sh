@@ -1,5 +1,5 @@
 #!/bin/zsh
-dfgan=11TR-z4RoQYSsR7oUXy7byCl4HX9uD3jF
+dfgan=1PtOjUqImOPnGF6sEg60Al5JodLUBvF7n
 
 mkdir -p src/povargan-server/trained/
 
