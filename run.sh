@@ -12,8 +12,8 @@ sh ./dl.sh 1m1k5HGESSTCzAMT8EgpeKFUUxLlzS6a_ src/povargan-server/trained/steps_t
 # dfgan 128
 sh ./dl.sh $dfgan src/povargan-server/trained/dfgan_128.pth
 # resnet
-sh ./dl.sh 1udslmO77CcvKKnfY7y-NkbleqC0QsfOz src/povargan-server/trained/title_ingr_image_encoder.pth
-sh ./dl.sh 1qjQW3MUfOc46bEYPIzeFT1wXqJfEIEPJ src/povargan-server/trained/steps_image_encoder.pth
+sh ./dl.sh 1vuLjcJ9JbMyJj61kiPm_lXZ5rpyvuubw src/povargan-server/trained/title_ingr_image_encoder.pth
+sh ./dl.sh 1km6h4G2fvXbwve6s_trCZcHBNmI6CkSC src/povargan-server/trained/steps_image_encoder.pth
 
 docker-compose build
 docker-compose up
